@@ -26,7 +26,7 @@ app.post('/api/contact', async (req, res) => {
   try {
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
+      port: Number(process.env.SMTP_PORT),
       secure: process.env.SMTP_SECURE === 'true',
       auth: {
         user: process.env.SMTP_USER,
@@ -34,17 +34,44 @@ app.post('/api/contact', async (req, res) => {
       },
     });
 
-    await transporter.sendMail({
-      from: `"${name}" <${email}>`,
-      to: 'farhankabir133@gmail.com',
+    // Verify transporter config
+    transporter.verify(function(error, success) {
+      if (error) {
+        console.error('Nodemailer transporter verification failed:', error);
+      } else {
+        console.log('Nodemailer transporter is ready to send messages');
+      }
+    });
+
+    console.log('Attempting to send email with config:', {
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      secure: process.env.SMTP_SECURE,
+      user: process.env.SMTP_USER,
+      to: process.env.CONTACT_EMAIL,
+    });
+
+    const mailOptions = {
+      from: `"FK Website" <${process.env.SMTP_USER}>`, // Use your Gmail as sender
+      to: process.env.CONTACT_EMAIL,
+      replyTo: email, // User's email for reply
       subject: subject,
       text: message,
       html: `<p><b>Name:</b> ${name}</p><p><b>Email:</b> ${email}</p><p><b>Message:</b><br>${message}</p>`
-    });
+    };
 
-    res.json({ success: true, message: 'Message sent successfully!' });
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.error('Error sending email:', err);
+        return res.status(500).json({ error: 'Failed to send message.', details: err.message });
+      } else {
+        console.log('Email sent:', info.response);
+        return res.json({ success: true, message: 'Message sent successfully!' });
+      }
+    });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to send message.' });
+    console.error('Unexpected error in /api/contact:', error);
+    res.status(500).json({ error: 'Failed to send message.', details: error.message });
   }
 });
 

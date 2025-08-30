@@ -1,5 +1,4 @@
-import React, { useState, useRef } from 'react';
-import emailjs from 'emailjs-com';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter, CheckCircle, Facebook, Instagram } from 'lucide-react';
@@ -20,7 +19,6 @@ const Contact: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const formRef = useRef<HTMLFormElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -29,28 +27,32 @@ const Contact: React.FC = () => {
     });
   };
 
-  const SERVICE_ID = 'service_3stwzho';      // Your EmailJS Service ID
-  const TEMPLATE_ID = 'template_gv8x65t';    // Your EmailJS Template ID
-  const PUBLIC_KEY = 'aj0eGnJ_eRIyt2Cc2';    // Your EmailJS Public Key
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setErrorMsg(null);
 
-    if (!formRef.current) return;
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
 
-    emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, formRef.current, PUBLIC_KEY)
-      .then(() => {
+      const data = await response.json();
+
+      if (response.ok && data.success) {
         setIsSubmitted(true);
         setFormData({ name: '', email: '', subject: '', message: '' });
         setTimeout(() => setIsSubmitted(false), 5000);
-      })
-      .catch((error) => {
-        setErrorMsg('Failed to send message. Please try again.');
-        console.error('EmailJS error:', error);
-      })
-      .finally(() => setIsSubmitting(false));
+      } else {
+        setErrorMsg(data.error || 'Failed to send message.');
+      }
+    } catch (error: any) {
+      setErrorMsg(error.message || 'Failed to send message.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactInfo = [
@@ -138,7 +140,7 @@ const Contact: React.FC = () => {
                   </p>
                 </motion.div>
               ) : (
-                <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
                   {errorMsg && (
                     <div className="bg-red-100 text-red-700 px-4 py-2 rounded mb-2 text-center animate-fade-in">
                       {errorMsg}

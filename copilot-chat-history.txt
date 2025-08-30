@@ -31,3 +31,15 @@ This file contains a summary of major project changes and chat history for the w
 
 For a full diff, see `server/project-changes.diff`.
 For more details, refer to the chat export or ask Copilot for a specific summary.
+\n---\nCommit: 3805d80 | Farhan Kabir | 2025-08-30\nMessage: Integrate EmailJS for contact form and update related configs\nFiles changed:\nM	copilot-chat-history.txt
+M	package-lock.json
+M	package.json
+A	server/# Code Citations.md
+M	server/.env.example
+M	server/package-lock.json
+M	server/package.json
+A	server/server.js
+M	src/components/About.tsx
+M	src/components/Contact.tsx
+A	src/lib/openai.ts
+M	vite.config.ts
