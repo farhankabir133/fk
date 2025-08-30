@@ -49,9 +49,9 @@ const About: React.FC = () => {
                 transition={{ duration: 6, repeat: Infinity }}
               />
               <img
-                src="https://images.pexels.com/photos/33137271/pexels-photo-33137271.png?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop"
+                src="/assets/fk.png"
                 alt="Farhan Kabir"
-                className="relative w-full h-96 object-cover rounded-2xl shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-300"
+                className="relative w-full h-96 object-contain bg-white rounded-2xl shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-300"
               />
               
               {/* Floating Elements */}
