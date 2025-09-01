@@ -1,6 +1,6 @@
 <!-- Hero Section -->
 <p align="center">
-  <img src="https://github.com/farhankabir133/fk/blob/my-feature/assets/fk.png" alt="FK's Personal Site" height="120" />
+  <img src="https://github.com/farhankabir133/fk/blob/fk_final_version/assets/fk.png" alt="FK's Personal Site" height="120" />
 </p>
 <h1 align="center">🤖 A Personal Modern Website with AI Assistant Chatbot</h1>
 <p align="center">
@@ -261,6 +261,7 @@ If you found this project helpful, please consider:
 </p>
 
 </div>
+
 
 
 
